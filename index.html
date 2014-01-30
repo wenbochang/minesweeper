@@ -1,0 +1,26 @@
+<html>
+<head>
+  <title>Minesweeper</title>
+  <script type="application/javascript" src=
+  "http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+  </script>
+
+  <script src="js/board.js"></script>
+  <script src="js/ui.js"></script>
+
+  <link href="css/style.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="board"></div>
+
+</body>
+
+<script>
+  $(function(){
+    var view = new Minesweeper.UI($(".board"));
+    view.render();
+  })
+</script>
+</html>
+
