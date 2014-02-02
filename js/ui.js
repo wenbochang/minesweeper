@@ -10,17 +10,24 @@
     var ui = this;
     ui.$el.empty();
     ui.board.field.forEach( function(row, row_index) {
-      row.forEach( function(space, col_index) {
+      row.forEach( function(fieldSpace, col_index) {
         var cell = $("<div class='cell'></div>");
         ui.$el.append(cell);   
-        cell.data("x", row_index);
-        cell.data("y", col_index);
+        cell.data("row", row_index);
+        cell.data("col", col_index);
         cell.mousedown(ui.parseClick.bind(ui)); //add click listener
-
-        if (space == "hasBomb") cell.addClass("hasBomb");
-        if (space == "hitBomb") cell.addClass("hitBomb");
+        
+        ui.addClassToCell(fieldSpace, cell);
       })
     });
+  }
+
+  UI.prototype.addClassToCell = function(fieldSpace, cell) {
+    if (fieldSpace == "hasBomb") cell.addClass("hasBomb");
+    else if (fieldSpace == "hitBomb") cell.addClass("hitBomb");
+    else if (fieldSpace == parseInt(fieldSpace)) {
+      cell.text(fieldSpace);
+    }
   }
 
   UI.prototype.parseClick = function(event) {

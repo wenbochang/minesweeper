@@ -7,7 +7,7 @@
   };
 
   Board.SIZE = 10;
-  Board.BOMB_COUNT = 20;
+  Board.BOMB_COUNT = 10;
 
   Board.prototype.makeField = function() {
     var field = [];
@@ -33,11 +33,40 @@
   }
 
   Board.prototype.checkForBomb = function(coords) {
-    var x = coords.x;
-    var y = coords.y;
-    if (this.field[x][y] == "hasBomb") {
-      console.log("hitBomb");
-      this.field[x][y] = "hitBomb";
+    var row = coords.row;
+    var col = coords.col;
+    if (this.field[row][col] == "hasBomb") {
+      this.field[row][col] = "hitBomb";
+    } else {
+      this.checkAdj(row, col);
     }
+  }
+
+  Board.prototype.checkAdj = function(row, col) {
+    var board = this;
+    var mineCount = 0;
+    var adj = [ [0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1] ];
+    adj.forEach( function(pair) {
+      var adjRow = row + pair[0];
+      var adjCol = col + pair[1];
+      var inBounds = ( adjRow >= 0 && adjRow < Board.SIZE && adjCol >= 0 && adjCol < Board.SIZE )
+      if (inBounds && board.field[adjRow][adjCol] == "hasBomb") {
+        mineCount++;
+      }
+    });
+
+    //set # of mines adj to this cell
+    board.field[row][col] = mineCount;
+
+    //recursive tile reveal if no bombs
+    if (mineCount > 0) return;
+    adj.forEach( function(pair) {
+      var adjRow = row + pair[0];
+      var adjCol = col + pair[1];
+      var inBounds = ( adjRow >= 0 && adjRow < Board.SIZE && adjCol >= 0 && adjCol < Board.SIZE );
+      if (inBounds && parseInt(board.field[adjRow][adjCol]) != board.field[adjRow][adjCol]) {
+        board.checkAdj.call(board, adjRow, adjCol);
+      }
+    });
   }
 })(this);
