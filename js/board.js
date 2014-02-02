@@ -7,7 +7,7 @@
   };
 
   Board.SIZE = 10;
-  Board.BOMB_COUNT = 10;
+  Board.BOMB_COUNT = window.BOMB_COUNT = 10;
 
   Board.prototype.makeField = function() {
     var field = [];
@@ -32,14 +32,27 @@
     }
   }
 
+  Board.prototype.checkGameOver = function() {
+    var gameOver = true;
+    this.field.forEach( function(row) {
+      row.forEach( function(fieldSpace) {
+        if (fieldSpace.mineCount === undefined && !fieldSpace.hasBomb) {
+          gameOver = false;
+        }
+      })
+    })
+    return gameOver;
+  }
+
   Board.prototype.checkForBomb = function(coords) {
     var row = coords.row;
     var col = coords.col;
     if (this.field[row][col].hasBomb) {
-      this.field[row][col].hitBomb = true;
+      alert("You lose!");
     } else {
       this.checkAdj(row, col);
     }
+    if (this.checkGameOver()) alert("You win!");
   }
 
   Board.prototype.flagForBomb = function(coords) {

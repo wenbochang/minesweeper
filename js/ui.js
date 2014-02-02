@@ -19,21 +19,27 @@
         
         ui.addClassToCell(fieldSpace, cell);
       })
-    });
+    })
+    ui.updateBombCount();
+  }
+
+  UI.prototype.updateBombCount = function() {
+    var $display = $("#bombCountDisplay");
+    var flagCount = $(".flag").length;
+    $display.text("Bombs left: " + (window.BOMB_COUNT - flagCount));
   }
 
   UI.prototype.addClassToCell = function(fieldSpace, cell) {
-    if (fieldSpace.hasBomb) cell.addClass("hasBomb");
     if (fieldSpace.hitBomb) cell.addClass("hitBomb");
     if (fieldSpace.flag == "flag") cell.addClass("flag");
     else if (fieldSpace.flag == "?") cell.text("?");
     else if (fieldSpace.mineCount == parseInt(fieldSpace.mineCount)) {
+      cell.addClass("safe");
       cell.text(fieldSpace.mineCount);
     }
   }
 
   UI.prototype.parseClick = function(event) {
-    event.preventDefault();
     var coords = $(event.currentTarget).data();
     if ( event.button == 0) {
       this.board.checkForBomb(coords);

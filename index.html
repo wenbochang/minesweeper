@@ -13,13 +13,14 @@
 
 <body>
   <!-- disable right click menu -->
+  <div id="bombCountDisplay">Bombs Left: 10</div>
   <div oncontextmenu="return false;" class="board"></div>
 
 </body>
 
 <script>
   $(function(){
-    var view = new Minesweeper.UI($(".board"));
+    view = new Minesweeper.UI($(".board"));
     view.render();
   })
 </script>
