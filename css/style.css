@@ -15,5 +15,9 @@
 }
 
 .hasBomb {
+  background-color: orange;
+}
+
+.hitBomb {
   background-color: red;
 }

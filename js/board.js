@@ -6,7 +6,7 @@
     this.setBombs();
   };
 
-  Board.SIZE = 20;
+  Board.SIZE = 10;
   Board.BOMB_COUNT = 20;
 
   Board.prototype.makeField = function() {
@@ -25,8 +25,19 @@
     while (bombs.length < Board.BOMB_COUNT) {
       var x = Math.floor((Math.random() * Board.SIZE));
       var y = Math.floor((Math.random() * Board.SIZE));
-      this.field[x][y] = "B";
-      bombs.push([x,y]);
+      if (this.field[x][y] != "hasBomb") {
+        this.field[x][y] = "hasBomb";
+        bombs.push([x,y]);
+      }
+    }
+  }
+
+  Board.prototype.checkForBomb = function(coords) {
+    var x = coords.x;
+    var y = coords.y;
+    if (this.field[x][y] == "hasBomb") {
+      console.log("hitBomb");
+      this.field[x][y] = "hitBomb";
     }
   }
 })(this);
