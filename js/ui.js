@@ -23,20 +23,22 @@
   }
 
   UI.prototype.addClassToCell = function(fieldSpace, cell) {
-    if (fieldSpace == "hasBomb") cell.addClass("hasBomb");
-    else if (fieldSpace == "hitBomb") cell.addClass("hitBomb");
-    else if (fieldSpace == parseInt(fieldSpace)) {
-      cell.text(fieldSpace);
+    if (fieldSpace.hasBomb) cell.addClass("hasBomb");
+    if (fieldSpace.hitBomb) cell.addClass("hitBomb");
+    if (fieldSpace.flag == "flag") cell.addClass("flag");
+    else if (fieldSpace.flag == "?") cell.text("?");
+    else if (fieldSpace.mineCount == parseInt(fieldSpace.mineCount)) {
+      cell.text(fieldSpace.mineCount);
     }
   }
 
   UI.prototype.parseClick = function(event) {
     event.preventDefault();
+    var coords = $(event.currentTarget).data();
     if ( event.button == 0) {
-      var coords = $(event.currentTarget).data();
       this.board.checkForBomb(coords);
     } else if (event.button == 2) {
-      console.log("right click");
+      this.board.flagForBomb(coords);
     }
     this.render();
   }

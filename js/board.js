@@ -14,7 +14,7 @@
     for (var i=0; i < Board.SIZE; i++ ) {
       field.push( [] );
       for (var j=0; j < Board.SIZE; j++ ) {
-        field[i].push(null);
+        field[i].push({});
       }  
     }
     return field;
@@ -25,8 +25,8 @@
     while (bombs.length < Board.BOMB_COUNT) {
       var x = Math.floor((Math.random() * Board.SIZE));
       var y = Math.floor((Math.random() * Board.SIZE));
-      if (this.field[x][y] != "hasBomb") {
-        this.field[x][y] = "hasBomb";
+      if (!this.field[x][y].hasBomb) {
+        this.field[x][y].hasBomb = true;
         bombs.push([x,y]);
       }
     }
@@ -35,10 +35,24 @@
   Board.prototype.checkForBomb = function(coords) {
     var row = coords.row;
     var col = coords.col;
-    if (this.field[row][col] == "hasBomb") {
-      this.field[row][col] = "hitBomb";
+    if (this.field[row][col].hasBomb) {
+      this.field[row][col].hitBomb = true;
     } else {
       this.checkAdj(row, col);
+    }
+  }
+
+  Board.prototype.flagForBomb = function(coords) {
+    var row = coords.row;
+    var col = coords.col;
+    if (this.field[row][col].flag === undefined ) {
+      this.field[row][col].flag = "flag";
+    } 
+    else if (this.field[row][col].flag === "flag") {
+      this.field[row][col].flag = "?";
+    } 
+    else if (this.field[row][col].flag === "?") {
+      this.field[row][col].flag = undefined;
     }
   }
 
@@ -50,13 +64,13 @@
       var adjRow = row + pair[0];
       var adjCol = col + pair[1];
       var inBounds = ( adjRow >= 0 && adjRow < Board.SIZE && adjCol >= 0 && adjCol < Board.SIZE )
-      if (inBounds && board.field[adjRow][adjCol] == "hasBomb") {
+      if (inBounds && board.field[adjRow][adjCol].hasBomb) {
         mineCount++;
       }
     });
 
     //set # of mines adj to this cell
-    board.field[row][col] = mineCount;
+    board.field[row][col].mineCount = mineCount;
 
     //recursive tile reveal if no bombs
     if (mineCount > 0) return;
@@ -64,7 +78,7 @@
       var adjRow = row + pair[0];
       var adjCol = col + pair[1];
       var inBounds = ( adjRow >= 0 && adjRow < Board.SIZE && adjCol >= 0 && adjCol < Board.SIZE );
-      if (inBounds && parseInt(board.field[adjRow][adjCol]) != board.field[adjRow][adjCol]) {
+      if (inBounds && board.field[adjRow][adjCol].mineCount === undefined) {
         board.checkAdj.call(board, adjRow, adjCol);
       }
     });
