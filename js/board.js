@@ -2,6 +2,7 @@
   var Minesweeper = root.Minesweeper = ( root.Minesweeper || {} );
 
   var Board = Minesweeper.Board = function() {
+    this.state = "playing";
     this.field = this.makeField();
     this.setBombs();
   };
@@ -48,11 +49,12 @@
     var row = coords.row;
     var col = coords.col;
     if (this.field[row][col].hasBomb) {
-      alert("You lose!");
+      this.field[row][col].hitBomb = true;
+      this.state = "lost";
     } else {
       this.checkAdj(row, col);
     }
-    if (this.checkGameOver()) alert("You win!");
+    if (this.checkGameOver()) this.state = "won";
   }
 
   Board.prototype.flagForBomb = function(coords) {

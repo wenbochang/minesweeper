@@ -13,8 +13,9 @@
 
 <body>
   <!-- disable right click menu -->
+  <button id="newGameBtn">New Game</button>
   <div id="bombCountDisplay">Bombs Left: 10</div>
-  <div oncontextmenu="return false;" class="board"></div>
+  <div class="board" oncontextmenu="return false;"></div>
 
 </body>
 
@@ -22,6 +23,11 @@
   $(function(){
     view = new Minesweeper.UI($(".board"));
     view.render();
+
+    $("#newGameBtn").click(function () {
+      view = new Minesweeper.UI($(".board"));
+      view.render();
+    })
   })
 </script>
 </html>

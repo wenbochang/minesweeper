@@ -15,9 +15,10 @@
         ui.$el.append(cell);   
         cell.data("row", row_index);
         cell.data("col", col_index);
-        cell.mousedown(ui.parseClick.bind(ui)); //add click listener
-        
         ui.addClassToCell(fieldSpace, cell);
+
+        //add click listener only if game is still going
+        if (ui.board.state === "playing") cell.mousedown(ui.parseClick.bind(ui));                 
       })
     })
     ui.updateBombCount();
@@ -30,6 +31,7 @@
   }
 
   UI.prototype.addClassToCell = function(fieldSpace, cell) {
+    if (this.board.state == "lost" && fieldSpace.hasBomb) cell.addClass("hasBomb");
     if (fieldSpace.hitBomb) cell.addClass("hitBomb");
     if (fieldSpace.flag == "flag") cell.addClass("flag");
     else if (fieldSpace.flag == "?") cell.text("?");
@@ -41,7 +43,7 @@
 
   UI.prototype.parseClick = function(event) {
     var coords = $(event.currentTarget).data();
-    if ( event.button == 0) {
+    if (event.button == 0) {
       this.board.checkForBomb(coords);
     } else if (event.button == 2) {
       this.board.flagForBomb(coords);
